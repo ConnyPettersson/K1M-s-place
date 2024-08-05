@@ -4,9 +4,26 @@ import React, { useState } from 'react';
 
 export default function Home() {
   const [showInfo, setShowinfo] = useState(false);
+  const [licenseKey, setLicenseKey] = useState('');
 
   const toggleInfo = () => {
     setShowinfo(!showInfo);
+  };
+
+  const handleLicenseChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ): void => {
+    setLicenseKey(event.target.value);
+  };
+
+  const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
+    event.preventDefault();
+    if (licenseKey === '1234') {
+      alert('Licensnyckeln är giltig.');
+      //Navigate
+    } else {
+      alert('Ogiltig licensnyckel');
+    }
   };
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-white">
@@ -31,7 +48,7 @@ export default function Home() {
           <p>Detta är en AI-baserad föräldrarådgivare</p>
         </div>
       )}
-      <div className="flex flex-col items-center">
+      <form onSubmit={handleFormSubmit} className="flex flex-col items-center">
         <div className="mb-0">
           <Image
             src="/images/Kim1.png"
@@ -43,10 +60,13 @@ export default function Home() {
         <div className="text-center">
           <input
             type="text"
+            value={licenseKey}
+            onChange={handleLicenseChange}
+            autoFocus
             className="h-6 p-2 border-2 border-green-500 rounded"
           />
         </div>
-      </div>
+      </form>
     </div>
   );
 }
