@@ -1,10 +1,13 @@
 'use client';
-import Image from 'next/image';
 import React, { useState } from 'react';
+import Image from 'next/image';
+import { useRouter } from 'next/router';
 
 export default function Home() {
   const [showInfo, setShowinfo] = useState(false);
   const [licenseKey, setLicenseKey] = useState('');
+  const [isKeyValid, setIsKeyValid] = useState(true);
+  //const router = useRouter();
 
   const toggleInfo = () => {
     setShowinfo(!showInfo);
@@ -19,12 +22,13 @@ export default function Home() {
   const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
     if (licenseKey === '1234') {
-      alert('Licensnyckeln är giltig.');
-      //Navigate
+      setIsKeyValid(true);
+      //router.push('/app/chat/page');
     } else {
-      alert('Ogiltig licensnyckel');
+      setIsKeyValid(false);
     }
   };
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-white">
       <header className="absolute top-0 left-0 right-0 flex items-center justify-between p-4">
@@ -63,8 +67,9 @@ export default function Home() {
             value={licenseKey}
             onChange={handleLicenseChange}
             autoFocus
-            className="h-6 p-2 border-2 border-green-500 rounded"
+            className={`h-6 p-2 border-2 ${isKeyValid ? 'border-green-500' : 'border-red-500'} rounded`}
           />
+          {!isKeyValid && <p className="text-red-500">Ogiltig licensnyckel</p>}
         </div>
       </form>
     </div>
