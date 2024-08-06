@@ -1,13 +1,34 @@
 'use client';
-import Image from 'next/image';
 import React, { useState } from 'react';
+import Image from 'next/image';
+import { useRouter } from 'next/router';
 
 export default function Home() {
   const [showInfo, setShowinfo] = useState(false);
+  const [licenseKey, setLicenseKey] = useState('');
+  const [isKeyValid, setIsKeyValid] = useState(true);
+  //const router = useRouter();
 
   const toggleInfo = () => {
     setShowinfo(!showInfo);
   };
+
+  const handleLicenseChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ): void => {
+    setLicenseKey(event.target.value);
+  };
+
+  const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
+    event.preventDefault();
+    if (licenseKey === '1234') {
+      setIsKeyValid(true);
+      //router.push('/app/chat/page');
+    } else {
+      setIsKeyValid(false);
+    }
+  };
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-white">
       <header className="absolute top-0 left-0 right-0 flex items-center justify-between p-4">
@@ -31,7 +52,7 @@ export default function Home() {
           <p>Detta är en AI-baserad föräldrarådgivare</p>
         </div>
       )}
-      <div className="flex flex-col items-center">
+      <form onSubmit={handleFormSubmit} className="flex flex-col items-center">
         <div className="mb-0">
           <Image
             src="/images/Kim1.png"
@@ -43,10 +64,14 @@ export default function Home() {
         <div className="text-center">
           <input
             type="text"
-            className="h-6 p-2 border-2 border-green-500 rounded"
+            value={licenseKey}
+            onChange={handleLicenseChange}
+            autoFocus
+            className={`h-6 p-2 border-2 ${isKeyValid ? 'border-green-500' : 'border-red-500'} rounded`}
           />
+          {!isKeyValid && <p className="text-red-500">Ogiltig licensnyckel</p>}
         </div>
-      </div>
+      </form>
     </div>
   );
 }
