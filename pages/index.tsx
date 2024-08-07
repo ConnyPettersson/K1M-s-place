@@ -23,11 +23,14 @@ export default function Home() {
     event.preventDefault();
     if (licenseKey === '1234') {
       setIsKeyValid(true);
-      //router.push('/app/chat/page');
+      //router.push('/app/welcome');
     } else {
       setIsKeyValid(false);
     }
   };
+  console.log(
+    `Applied class: ${isKeyValid ? 'border-green-500' : 'border-red-500'}`,
+  );
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-white">
