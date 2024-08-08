@@ -22,6 +22,7 @@
     "openai": "^4.53.2",
     "react": "^18",
     "react-dom": "^18",
+    "react-icons": "^5.2.1",
     "use-debounce": "^10.0.1"
   },
   "devDependencies": {
