@@ -19,3 +19,7 @@ input[type='text'] {
 button {
   @apply bg-none border-none cursor-pointer;
 }
+
+.visible-border {
+  border: 2px solid #38a169;
+}

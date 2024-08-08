@@ -7,7 +7,7 @@ export default function Home() {
   const [showInfo, setShowinfo] = useState(false);
   const [licenseKey, setLicenseKey] = useState('');
   const [isKeyValid, setIsKeyValid] = useState(true);
-  //const router = useRouter();
+  const router = useRouter();
 
   const toggleInfo = () => {
     setShowinfo(!showInfo);
@@ -23,7 +23,7 @@ export default function Home() {
     event.preventDefault();
     if (licenseKey === '1234') {
       setIsKeyValid(true);
-      //router.push('/app/welcome');
+      router.push('/app/welcome');
     } else {
       setIsKeyValid(false);
     }
