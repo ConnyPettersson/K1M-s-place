@@ -23,3 +23,91 @@ button {
 .visible-border {
   border: 2px solid #38a169;
 }
+
+.menu {
+  position: absolute;
+  z-index: 1000;
+}
+
+.info {
+  position: absolute;
+  z-index: 999;
+}
+
+.loading-dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loading-dots span {
+  width: 10px;
+  height: 10px;
+  margin: 0 5px;
+  background-color: #ccc;
+  border-radius: 50%;
+  display: inline-block;
+  animation: loading 1s infinite alternate;
+}
+
+.loading-dots span:nth-child(3) {
+  animation-delay: 0.4;
+}
+
+@keyframes loading {
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0.3;
+  }
+}
+
+.ai-message,
+.user-message {
+  display: flex;
+  align-items: center;
+  border-radius: 15px;
+  padding: 10px;
+  margin: 5px 0;
+  margin-left: 40px;
+  width: fit-content;
+}
+
+.ai-message {
+  background-color: lightgreen;
+  position: relative;
+}
+
+.user-message {
+  justify-content: flex-end;
+  background-color: lightgray;
+  margin-left: auto;
+}
+
+.message-text {
+  border-radius: 15px;
+  padding: 8px 12px;
+  background-color: inherit;
+}
+
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+  max-height: 70vh;
+}
+
+.ai-avatar {
+  width: 40px;
+  /* Exempel på storlek */
+  height: 40px;
+  /* Justera denna värde för att få avataren att skjuta ut från den gröna rutan */
+  position: absolute;
+  left: -50px;
+  top: 50%;
+  transform: translateY(-50%);
+  /* Centrerar bilden vertikalt */
+}
