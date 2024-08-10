@@ -1,16 +1,23 @@
 'use client';
+import React, { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
-import { useState } from 'react';
 import { FaBars } from 'react-icons/fa';
 import { IoMdClose } from 'react-icons/io';
 
+interface Message {
+  text: string;
+  from: 'user' | 'ai';
+}
+
 export default function Home() {
-  const [response, setResponse] = useState('');
-  const [prompt, setPrompt] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [showInfo, setShowInfo] = useState(false);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [prompt, setPrompt] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>('');
+  const [menuOpen, setMenuOpen] = useState<boolean>(false);
+  const [showInfo, setShowInfo] = useState<boolean>(false);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
@@ -20,9 +27,14 @@ export default function Home() {
     setShowInfo(!showInfo);
   };
 
-  const getResponse = async () => {
+  const getResponse = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     setLoading(true);
     setError('');
+    setMessages((prevMessages) => [
+      ...prevMessages,
+      { text: prompt, from: 'user' },
+    ]);
     try {
       const res = await fetch('/api/generate-answer', {
         method: 'POST',
@@ -38,24 +50,30 @@ export default function Home() {
       }
 
       const data = await res.json();
-      if (!data.text) {
-        setError('Inget svar mottogs från servern.');
-        return;
-      }
-
-      setResponse(data.text);
-    } catch (error: unknown) {
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { text: data.text, from: 'ai' },
+      ]);
+      setPrompt('');
+    } catch (error: any) {
       console.error('Error fetching response:', error);
-      if (error instanceof Error) {
-        setError(error.message);
-      } else {
-        setError('An unknown error occurred');
-      }
+      setError('Ett fel inträffade när svaret skulle hämtas.');
     } finally {
       setLoading(false);
     }
   };
 
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'inherit';
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+    }
+
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop =
+        chatContainerRef.current.scrollHeight;
+    }
+  }, [messages]);
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-white">
       <header className="absolute top-0 left-0 right-0 flex items-center justify-between p-4">
@@ -79,7 +97,7 @@ export default function Home() {
         </button>
       </header>
       {menuOpen && (
-        <div className="absolute top-16 left-0 bg-white text-black border-r-2 border-b-2 border-green-500 w-[200px]">
+        <div className="menu absolute top-16 left-0 bg-white text-black border-r-2 border-b-2 border-green-500 w-[200px]">
           <ul className="list-none p-4">
             <li className="p-2 hover:bg-green-300 border-b border-gray-200 last:border-b-0">
               Fråga K1M
@@ -94,39 +112,69 @@ export default function Home() {
         </div>
       )}
       {showInfo && (
-        <div className="absolute top-20 right-10 mt-[-28px] bg-white border-2 border-green-300 shadow-lg p-3 rounded-tl-lg rounded-tr-3xl rounded-bl-lg rounded-br-none w-36 h-30">
+        <div className="info absolute top-20 right-10 mt-[-28px] bg-white border-2 border-green-300 shadow-lg p-3 rounded-tl-lg rounded-tr-3xl rounded-bl-lg rounded-br-none w-36 h-30">
           <p>Detta är en AI-baserad föräldrarådgivare</p>
         </div>
       )}
-      <textarea
-        className="w-11/12 mx-auto p-2 border-2 border-green-500 rounded-lg focus:border-green-600 focus:ring focus:ring-green-500 focus:ring-opacity-50"
-        value={prompt}
-        onChange={(e) => setPrompt(e.target.value)}
-        placeholder="Skriv här"
-      />
-
-      <button
-        className="mt-2 bg-green-500 text-white p-2 py-2 rounded disabled:opacity-50"
-        onClick={getResponse}
-        disabled={loading}
-      >
-        {loading ? (
-          <div className="loading-dots flex items-center">
+      <div className="chat-container w-full p-4 max-h-[70vh] overflow-y-auto">
+        <div
+          ref={chatContainerRef}
+          className="chat-container w-full p-4 max-h-[70vh] overflow-y-auto"
+        >
+          {messages.map((msg, index) => (
+            <div
+              key={index}
+              className={`message ${msg.from === 'ai' ? 'ai-message' : 'user-message'}`}
+            >
+              {msg.from === 'ai' && (
+                <Image
+                  src="/images/kim4.png"
+                  alt="AI Avatar"
+                  width={40}
+                  height={40}
+                  className="ai-avatar"
+                />
+              )}
+              <div
+                className="message-text"
+                style={{ paddingLeft: msg.from === 'ai' ? '50px' : '10px' }}
+              >
+                {msg.text}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <form onSubmit={getResponse} className="w-full px-4">
+        <textarea
+          ref={textareaRef}
+          className="w-full p-2 border-2 border-green-500 rounded-lg focus:border-green-600 focus:ring focus:ring-green-500 focus:ring-opacity-50"
+          value={prompt}
+          onChange={(e) => setPrompt(e.target.value)}
+          placeholder="Skriv här"
+          style={{ overflowY: 'hidden', minHeight: '50px' }}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+              e.preventDefault();
+              getResponse(e as unknown as React.FormEvent<HTMLFormElement>);
+            }
+          }}
+        />
+        {loading && (
+          <div className="loading-dots flex items-center justify-center">
             <img
               src="/images/kim4.png"
-              alt="Avatar 2"
+              alt="Loading"
               className="w-6 h-6 mr-2"
             />
             <span></span>
             <span></span>
             <span></span>
           </div>
-        ) : (
-          'Skicka fråga'
         )}
-      </button>
+        <input type="submit" className="hidden" />
+      </form>
       {error && <p className="text-red-500 mt-2">{error}</p>}
-      <p className="mt-4">{response}</p>
     </div>
   );
 }
