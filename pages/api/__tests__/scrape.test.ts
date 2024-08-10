@@ -2,7 +2,7 @@ jest.mock('../../../services/scraper', () => ({
   scrapeURL: jest.fn().mockResolvedValue('expected scraped data'),
 }));
 import { createMocks } from 'node-mocks-http';
-import handleScrape from '../scrape';
+import handleScrape from '../../../pages/api/scrape';
 
 describe('scrape API Endpoint', () => {
   it('should return 200 and the correct data when a valid URL is provided', async () => {
