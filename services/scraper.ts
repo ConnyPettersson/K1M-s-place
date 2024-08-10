@@ -24,6 +24,7 @@ const domainRules: DomainRules = {
 };
 
 export const scrapeURL = async (url: string): Promise<string> => {
+  console.log(`Fetching URL: ${url}`);
   try {
     const urlObj = new URL(url);
     const disallowedPaths =
@@ -34,10 +35,13 @@ export const scrapeURL = async (url: string): Promise<string> => {
         (path: string) => url.includes(path) && !path.startsWith('!'),
       )
     ) {
+      console.error(`Access to the URL ${url} is disallowed by robots.txt`);
       throw new Error('Access to the URL is disallowed by robots.txt');
     }
 
     const { data } = await axios.get(url);
+    console.log(`Data fetched for URL: ${url}`);
+    console.log('Raw HTML data:', data);
     const $ = load(data);
 
     let content = '';
@@ -50,7 +54,7 @@ export const scrapeURL = async (url: string): Promise<string> => {
     console.log(`Scraped content from ${url}:`, content);
     return content.trim();
   } catch (error) {
-    console.error('Error scraping:', error);
-    throw error; // Vidarebefordra exakt fel som kastas
+    console.error(`Error scraping URL: ${url}`, error);
+    throw error;
   }
 };

@@ -1,0 +1,14 @@
+declare module 'node-mocks-http' {
+  import { Request, Response } from 'express';
+
+  export function createMocks(
+    request?: Record<string, any>,
+    response?: Record<string, any>
+  ): {
+    req: Request;
+    res: Response & {
+      _getData: () => string;
+      _getStatusCode: () => number;
+    };
+  };
+}
