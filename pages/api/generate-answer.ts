@@ -107,10 +107,9 @@ export default async function handler(
     });
     console.log('Fetching AI response...');
 
-    const response =
-      aiResult.choices[0].message?.content?.trim() ||
-      'Sorry, there was a problem!';
-    res.status(200).json({ text: response });
+    const responseText = aiResult.choices[0]?.message?.content?.trim() || '';
+    const cleanedResponse = responseText.replace(/\"|Användare:/g, '');
+    res.status(200).json({ text: cleanedResponse }); // Send cleaned response
   } catch (error) {
     console.error('Error fetching AI response:', error);
 

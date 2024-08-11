@@ -69,11 +69,12 @@ export default function Home() {
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
     }
 
-    if (chatContainerRef.current) {
-      chatContainerRef.current.scrollTop =
-        chatContainerRef.current.scrollHeight;
+    const lastMessageElement = document.querySelector('.message:last-child');
+    if (lastMessageElement) {
+      lastMessageElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   }, [messages]);
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-white">
       <header className="absolute top-0 left-0 right-0 flex items-center justify-between p-4">
@@ -137,7 +138,7 @@ export default function Home() {
               )}
               <div
                 className="message-text"
-                style={{ paddingLeft: msg.from === 'ai' ? '50px' : '10px' }}
+                style={{ paddingLeft: msg.from === 'ai' ? '20px' : '10px' }}
               >
                 {msg.text}
               </div>
@@ -145,6 +146,14 @@ export default function Home() {
           ))}
         </div>
       </div>
+      {loading && (
+        <div className="loading-dots flex items-center justify-center mb-2">
+          <img src="/images/kim4.png" alt="Loading" className="w-6 h-6 mr-2" />
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      )}
       <form onSubmit={getResponse} className="w-full px-4">
         <textarea
           ref={textareaRef}
@@ -160,18 +169,6 @@ export default function Home() {
             }
           }}
         />
-        {loading && (
-          <div className="loading-dots flex items-center justify-center">
-            <img
-              src="/images/kim4.png"
-              alt="Loading"
-              className="w-6 h-6 mr-2"
-            />
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-        )}
         <input type="submit" className="hidden" />
       </form>
       {error && <p className="text-red-500 mt-2">{error}</p>}
