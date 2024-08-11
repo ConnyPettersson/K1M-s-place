@@ -152,6 +152,8 @@ export default function Home() {
             src="/images/kim4.png"
             alt="Loading"
             className="w-6 h-6 mr-2"
+            width={44}
+            height={44}
           />
           <span></span>
           <span></span>
