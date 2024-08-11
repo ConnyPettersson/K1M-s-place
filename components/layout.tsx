@@ -12,7 +12,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="sv">
       <body className="min-h-screen bg-gray-100 flex flex-col">
         <main className="flex-grow">{children}</main>
       </body>
