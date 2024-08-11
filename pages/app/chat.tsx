@@ -148,7 +148,11 @@ export default function Home() {
       </div>
       {loading && (
         <div className="loading-dots flex items-center justify-center mb-2">
-          <img src="/images/kim4.png" alt="Loading" className="w-6 h-6 mr-2" />
+          <Image
+            src="/images/kim4.png"
+            alt="Loading"
+            className="w-6 h-6 mr-2"
+          />
           <span></span>
           <span></span>
           <span></span>
