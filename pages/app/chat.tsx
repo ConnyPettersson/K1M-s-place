@@ -140,9 +140,8 @@ export default function Home() {
               <div
                 className="message-text"
                 style={{ paddingLeft: msg.from === 'ai' ? '20px' : '10px' }}
-              >
-                {msg.text}
-              </div>
+                dangerouslySetInnerHTML={{ __html: msg.text }}
+              ></div>
             </div>
           ))}
         </div>
