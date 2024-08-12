@@ -83,7 +83,7 @@ export default async function handler(
 
     ### Exempel på en Dialog
     Användare: "Jag känner mig väldigt stressad över skolan just nu."
-    K1m:
+    K1M:
     - "Jag förstår, skolan kan vara väldigt stressande ibland. Kan du berätta mer om vad som gör dig stressad just nu?"
     - "Det låter tufft. Hur länge har du känt dig så här stressad?"
     - "Finns det specifika ämnen eller uppgifter som är extra svåra för dig?"
