@@ -83,7 +83,7 @@ export default function Home() {
         </button>
         <Image
           className="mt-2"
-          src="/images/Kimlogo.png"
+          src="/images/KimLogo.png"
           alt="K1M avatar1"
           width={120}
           height={120}
@@ -129,7 +129,7 @@ export default function Home() {
             >
               {msg.from === 'ai' && (
                 <Image
-                  src="/images/kim4.png"
+                  src="/images/Kim4.png"
                   alt="AI Avatar"
                   width={40}
                   height={40}
@@ -149,7 +149,7 @@ export default function Home() {
       {loading && (
         <div className="loading-dots flex items-center justify-center mb-2">
           <Image
-            src="/images/kim4.png"
+            src="/images/Kim4.png"
             alt="Loading"
             className="w-6 h-6 mr-2"
             width={44}
