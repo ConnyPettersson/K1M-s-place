@@ -30,14 +30,14 @@ button {
 }
 
 .info {
-  position: absolute;
   z-index: 999;
+  position: absolute;
 }
 
 .loading-dots {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: start;
 }
 
 .loading-dots span {
@@ -102,12 +102,9 @@ button {
 
 .ai-avatar {
   width: 40px;
-  /* Exempel på storlek */
   height: 40px;
-  /* Justera denna värde för att få avataren att skjuta ut från den gröna rutan */
   position: absolute;
   left: -50px;
   top: 50%;
   transform: translateY(-50%);
-  /* Centrerar bilden vertikalt */
 }

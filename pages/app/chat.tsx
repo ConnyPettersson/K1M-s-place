@@ -3,7 +3,6 @@ import React, { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import { FaBars } from 'react-icons/fa';
 import { IoMdClose } from 'react-icons/io';
-
 interface Message {
   text: string;
   from: 'user' | 'ai';
@@ -76,8 +75,8 @@ export default function Home() {
   }, [messages]);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-white">
-      <header className="absolute top-0 left-0 right-0 flex items-center justify-between p-4">
+    <div className="flex flex-col max-w-2xl mx-auto w-full justify-center min-h-screen bg-white">
+      <header className="absolute max-w-2xl mx-auto w-full top-0 left-0 right-0 flex items-center justify-between p-4">
         <button onClick={toggleMenu} className="text-3xl">
           {menuOpen ? <IoMdClose /> : <FaBars />}
         </button>
@@ -88,17 +87,24 @@ export default function Home() {
           width={120}
           height={120}
         />
-        <button onClick={toggleInfo}>
-          <Image
-            src="/images/circle-info-solid.svg"
-            alt="Info"
-            width={44}
-            height={44}
-          />
-        </button>
+        <div className="relative">
+          <button onClick={toggleInfo} className="info-button">
+            <Image
+              src="/images/circle-info-solid.svg"
+              alt="Info"
+              width={44}
+              height={44}
+            />
+          </button>
+          {showInfo && (
+            <div className="info absolute top-full right-5 mt-[-13px] bg-white border-2 border-green-300 shadow-lg p-3 rounded rounded-tl-lg rounded-tr-3xl rounded-bl-lg rounded-br-none w-36 h-30">
+              <p>Detta är en AI-baserad föräldrarådgivare</p>
+            </div>
+          )}
+        </div>
       </header>
       {menuOpen && (
-        <div className="menu absolute top-16 left-0 bg-white text-black border-r-2 border-b-2 border-green-500 w-[200px]">
+        <div className="menu max-w-2xl mx-auto absolute top-16 bg-white text-black border-r-2 border-b-2 border-green-500 w-[200px]">
           <ul className="list-none p-4">
             <li className="p-2 hover:bg-green-300 border-b border-gray-200 last:border-b-0">
               Fråga K1M
@@ -110,11 +116,6 @@ export default function Home() {
               Hjälp / Stöd
             </li>
           </ul>
-        </div>
-      )}
-      {showInfo && (
-        <div className="info absolute top-20 right-10 mt-[-28px] bg-white border-2 border-green-300 shadow-lg p-3 rounded-tl-lg rounded-tr-3xl rounded-bl-lg rounded-br-none w-36 h-30">
-          <p>Detta är en AI-baserad föräldrarådgivare</p>
         </div>
       )}
       <div className="chat-container w-full p-4 max-h-[70vh] overflow-y-auto">
@@ -147,7 +148,7 @@ export default function Home() {
         </div>
       </div>
       {loading && (
-        <div className="loading-dots flex items-center justify-center mb-2">
+        <div className="loading-dots flex items-center justify-center mb-4 ml-4">
           <Image
             src="/images/Kim4.png"
             alt="Loading"
