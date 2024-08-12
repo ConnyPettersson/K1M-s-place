@@ -33,16 +33,13 @@ export default async function handler(
     for (const url of urls) {
       try {
         const scrapedData = await scrapeURL(url);
-        console.log(`Data scraped from ${url}:`, scrapedData); // Logga URL och hämtad data
+        console.log(`Data scraped from ${url}:`, scrapedData);
         additionalInfo += `${scrapedData}\n`;
       } catch (error) {
         console.error('Error scraping URL:', url, error);
       }
     }
 
-    // const aiPrompt = `${prompt}\nAdditional Info:\n${additionalInfo}`;
-
-    // Skapa strukturerad prompt
     const structuredPrompt = `
     Du är en AI-assistent för föräldrar som söker råd om olika problem. Använd informationen från BRIS och Friends för att ge relevanta och empatiska råd. Följ dessa riktlinjer:
     ### Inledande Frågor
@@ -83,7 +80,6 @@ export default async function handler(
 
     ### Exempel på en Dialog
     Användare: "Jag känner mig väldigt stressad över skolan just nu."
-    K1M:
     - "Jag förstår, skolan kan vara väldigt stressande ibland. Kan du berätta mer om vad som gör dig stressad just nu?"
     - "Det låter tufft. Hur länge har du känt dig så här stressad?"
     - "Finns det specifika ämnen eller uppgifter som är extra svåra för dig?"
@@ -94,7 +90,9 @@ export default async function handler(
     Additional Information:
     ${additionalInfo}
 
-    Fråga: ${prompt}
+   ${prompt}
+    Additional Information:
+    ${additionalInfo}
     `;
 
     const aiResult = await openai.chat.completions.create({
@@ -107,17 +105,24 @@ export default async function handler(
     });
     console.log('Fetching AI response...');
 
-    const responseText = aiResult.choices[0]?.message?.content?.trim() || '';
-    const cleanedResponse = responseText.replace(/\"|Användare:/g, '');
-    res.status(200).json({ text: cleanedResponse }); // Send cleaned response
+    const rawResponse =
+      aiResult.choices[0].message?.content || 'Sorry, there was a problem!';
+    const cleanedResponse = rawResponse
+      .replace(/\*\*.*?\*\*/g, '')
+      .replace(/[:;]+/g, '')
+      .trim();
+
+    const responsePrefix = 'AI-genererat svar:<br>';
+    const finalResponse =
+      responsePrefix + cleanedResponse.replace(/\n/g, '<br>');
+
+    res.status(200).json({ text: finalResponse });
   } catch (error) {
     console.error('Error fetching AI response:', error);
-
     let errorMessage = 'Unknown error';
     if (error instanceof Error) {
       errorMessage = error.message;
     }
-
     res.status(500).json({
       text: `Sorry, there was a problem fetching the response. Error: ${errorMessage}`,
     });
