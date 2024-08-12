@@ -14,7 +14,9 @@ export default function RootLayout({
   return (
     <html lang="sv">
       <body className="min-h-screen bg-gray-100 flex flex-col">
-        <main className="flex-grow">{children}</main>
+        <main className="flex-grow">
+          <div className="max-w-2xl mx-auto w-full">{children}</div>
+        </main>
       </body>
     </html>
   );

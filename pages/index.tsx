@@ -34,27 +34,29 @@ export default function Home() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-white">
-      <header className="absolute top-0 left-0 right-0 flex items-center justify-between p-4">
+      <header className="max-w-2xl mx-auto w-full absolute top-0 left-0 right-0 flex items-center justify-between p-4">
         <Image
           src="/images/Kim4logo.png"
           alt="K1M avatar1"
           width={200}
           height={200}
         />
-        <button onClick={toggleInfo}>
-          <Image
-            src="/images/circle-info-solid.svg"
-            alt="Info"
-            width={44}
-            height={44}
-          />
-        </button>
-      </header>
-      {showInfo && (
-        <div className="absolute top-20 right-10 mt-[-28px] bg-white border-2 border-green-300 shadow-lg p-3 rounded-tl-lg rounded-tr-3xl rounded-bl-lg rounded-br-none w-36 h-30">
-          <p>Detta är en AI-baserad föräldrarådgivare</p>
+        <div className="relative">
+          <button onClick={toggleInfo}>
+            <Image
+              src="/images/circle-info-solid.svg"
+              alt="Info"
+              width={44}
+              height={44}
+            />
+          </button>
+          {showInfo && (
+            <div className="absolute top-full right-5 mt-[-13px] bg-white border-2 border-green-300 shadow-lg p-3 rounded-tl-lg rounded-tr-3xl rounded-bl-lg rounded-br-none w-36 h-30">
+              <p>Detta är en AI-baserad föräldrarådgivare</p>
+            </div>
+          )}
         </div>
-      )}
+      </header>
       <form onSubmit={handleFormSubmit} className="flex flex-col items-center">
         <div className="mb-0">
           <Image
