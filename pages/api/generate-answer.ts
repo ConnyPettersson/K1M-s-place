@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import openai from '../../utils/openai';
 import dotenv from 'dotenv';
 import { scrapeURL } from '../../services/scraper';
+import { urls as importedUrls } from '../../services/urls';
 
 dotenv.config();
 
@@ -15,13 +16,14 @@ interface GenerateNextApiRequest extends NextApiRequest {
   };
 }
 
-const urls = ['https://www.bris.se', 'https://www.friends.se'];
+const urls = importedUrls;
 
 export default async function handler(
   req: GenerateNextApiRequest,
   res: NextApiResponse<ResponseData>,
 ) {
   const { prompt } = req.body;
+  console.log('Received prompt:', prompt);
 
   if (!prompt || prompt === '') {
     return res.status(400).json({ text: 'Please send your prompt' });
@@ -30,18 +32,20 @@ export default async function handler(
   try {
     let additionalInfo = '';
 
+    // Skrapa innehåll från alla URL:er i listan
     for (const url of urls) {
       try {
-        const scrapedData = await scrapeURL(url);
-        console.log(`Data scraped from ${url}:`, scrapedData);
-        additionalInfo += `${scrapedData}\n`;
+        const content = await scrapeURL(url);
+        additionalInfo += content + '\n';
+        console.log(`Scraped content from ${url}:`, content.slice(0, 200)); // Logga de första 200 tecknen av det skrapade innehållet
       } catch (error) {
-        console.error('Error scraping URL:', url, error);
+        console.error(`Failed to scrape content from ${url}`, error);
       }
     }
 
     const structuredPrompt = `
-    Du är en AI-assistent för föräldrar som söker råd om olika problem. Använd informationen från BRIS och Friends för att ge relevanta och empatiska råd. Följ dessa riktlinjer:
+    Du är en AI-assistent för föräldrar som söker råd om olika problem. Din uppgift är att använda information från BRIS, 1177, polisen, Friends och som vägledare för vårdnadshavare i Säffle kommun för att ge specifika och empatiska råd som är relevanta för den situation användaren beskriver. Undvik generiska eller automatiserade svar; fokusera istället på att ge faktabaserade och stödjande svar. Tipsa inte om resurser från BRIS, 1177, polisen och Friends direkt utan fokusera på samtalet med föräldern.
+
     ### Inledande Frågor
     1. **Öppna Frågor**: Starta med öppna frågor som uppmuntrar användaren att dela mer om sin situation.
        - "Hur kan jag hjälpa dig idag?"
@@ -87,12 +91,11 @@ export default async function handler(
     - "Har du pratat med dina lärare eller föräldrar om hur du känner?"
     - "Tack för att du delar med dig. Vill du att jag ger några tips på hur du kan hantera stressen?"
 
+    Kom ihåg att undvika generiska eller automatiserade svar om du inte är säker på användarens behov. Fokusera på att ge faktabaserade och stödjande råd.
     Additional Information:
     ${additionalInfo}
 
-   ${prompt}
-    Additional Information:
-    ${additionalInfo}
+    ${prompt}
     `;
 
     const aiResult = await openai.chat.completions.create({
@@ -111,10 +114,12 @@ export default async function handler(
       .replace(/\*\*.*?\*\*/g, '')
       .replace(/[:;]+/g, '')
       .trim();
+    console.log('Raw AI response:', rawResponse);
 
     const responsePrefix = 'AI-genererat svar:<br>';
     const finalResponse =
       responsePrefix + cleanedResponse.replace(/\n/g, '<br>');
+    console.log('Final AI response sent to client:', finalResponse);
 
     res.status(200).json({ text: finalResponse });
   } catch (error) {
