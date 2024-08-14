@@ -69,7 +69,7 @@ export const scrapeURL = async (url: string): Promise<string> => {
     const response = await axios.get(url, {
       responseType: 'arraybuffer', // För att kunna behandla binära data korrekt
       maxRedirects: 5, // Limit redirects
-      timeout: 10000, // Set a timeout
+      timeout: 30000, // Set a timeout
     });
 
     // Hantera teckenkodning korrekt med iconv-lite
