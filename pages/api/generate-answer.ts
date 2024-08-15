@@ -37,7 +37,7 @@ export default async function handler(
       try {
         const content = await scrapeURL(url);
         additionalInfo += content + '\n';
-        console.log(`Scraped content from ${url}:`, content.slice(0, 200)); // Logga de första 200 tecknen av det skrapade innehållet
+        console.log(`Scraped content from ${url}:`, content.slice(0, 200));
       } catch (error) {
         console.error(`Failed to scrape content from ${url}`, error);
       }
