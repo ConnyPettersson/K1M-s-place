@@ -87,8 +87,6 @@ export const scrapeURL = async (url: string): Promise<string> => {
       content = $('div.specific-class-for-1177, .another-class, p').text();
     } else if (url.includes('saffle.se')) {
       content = $('div.specific-class-for-saffle, .another-class, p').text();
-    } else if (url.includes('polisen.se')) {
-      content = $('div.specific-class-for-polisen, .another-class, p').text();
     }
 
     console.log(`Scraped content from ${url}:`, content.slice(0, 200)); // Logga de första 200 tecknen

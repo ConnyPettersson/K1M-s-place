@@ -1,0 +1,10 @@
+{
+  "functions": {
+    "api/scrape.ts": {
+      "maxDuration": 60
+    },
+    "api/generate-answer.ts": {
+      "maxDuration": 60
+    }
+  }
+}
