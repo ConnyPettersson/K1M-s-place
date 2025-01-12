@@ -8,7 +8,7 @@ interface Message {
   from: 'user' | 'ai';
 }
 
-export default function Home() {
+export default function Chat() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [prompt, setPrompt] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
