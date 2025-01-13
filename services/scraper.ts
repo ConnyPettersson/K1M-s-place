@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { load } from 'cheerio';
 import iconv from 'iconv-lite';
-import { urls as importedUrls } from './urls';
 
 interface DomainRules {
   [key: string]: string[];
@@ -109,17 +108,3 @@ export const scrapeURL = async (url: string): Promise<string> => {
     throw error;
   }
 };
-
-// Skrapa innehåll från alla URL:er i listan
-const urls = importedUrls;
-
-(async () => {
-  for (const url of urls) {
-    try {
-      const content = await scrapeURL(url);
-      console.log(`Content from ${url}:`, content);
-    } catch (error) {
-      console.error(`Error scraping ${url}:`, error);
-    }
-  }
-})();
