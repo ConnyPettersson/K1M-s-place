@@ -66,12 +66,11 @@ export const scrapeURL = async (url: string): Promise<string> => {
     }
 
     const response = await axios.get(url, {
-      responseType: 'arraybuffer', // För att kunna behandla binära data korrekt
-      maxRedirects: 5, // Limit redirects
-      timeout: 30000, // Set a timeout
+      responseType: 'arraybuffer',
+      maxRedirects: 5,
+      timeout: 30000,
     });
 
-    // Hantera teckenkodning korrekt med iconv-lite
     const decodedContent = iconv.decode(Buffer.from(response.data), 'utf-8');
     console.log('Raw HTML data:', decodedContent);
 
@@ -88,7 +87,7 @@ export const scrapeURL = async (url: string): Promise<string> => {
       content = $('div.specific-class-for-saffle, .another-class, p').text();
     }
 
-    console.log(`Scraped content from ${url}:`, content.slice(0, 200)); // Logga de första 200 tecknen
+    console.log(`Scraped content from ${url}:`, content.slice(0, 200));
     return content.trim();
   } catch (error) {
     if (axios.isAxiosError(error)) {
