@@ -1,7 +1,25 @@
 import openai from '../openai';
 
-describe('OpenAI Client', () => {
-  it('should respond with a message from OpenAI', async () => {
+jest.mock('../openai', () => {
+  return {
+    chat: {
+      completions: {
+        create: jest.fn().mockResolvedValue({
+          choices: [
+            {
+              message: {
+                content: 'Mocked AI response',
+              },
+            },
+          ],
+        }),
+      },
+    },
+  };
+});
+
+describe('OpenAI Client (mocked)', () => {
+  it('should respond with a mock message', async () => {
     const testPrompt = 'Hello, OpenAI!';
     const response = await openai.chat.completions.create({
       model: 'gpt-3.5-turbo',
@@ -9,6 +27,6 @@ describe('OpenAI Client', () => {
       temperature: 0.5,
     });
 
-    expect(response.choices[0].message?.content).toBeTruthy();
+    expect(response.choices[0].message?.content).toBe('Mocked AI response');
   });
 });
