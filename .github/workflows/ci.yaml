@@ -20,7 +20,6 @@ jobs:
 
       - name: Test
         run: npm run test
-
-      # Ev. build-steg
-      # - name: Build
-      #   run: npm run build
+      
+      - name: Build
+       run: npm run build
